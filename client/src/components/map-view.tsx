@@ -10,6 +10,7 @@ interface MapViewProps {
   attacks: Attack[];
   onAttackClick: (attack: Attack) => void;
   isLoading: boolean;
+  isDetailOpen: boolean;
 }
 
 const getSeverityColor = (severity: string): string => {
@@ -46,7 +47,7 @@ const createCustomIcon = (severity: string) => {
   });
 };
 
-export function MapView({ attacks, onAttackClick, isLoading }: MapViewProps) {
+export function MapView({ attacks, onAttackClick, isLoading, isDetailOpen }: MapViewProps) {
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markerClusterGroupRef = useRef<L.MarkerClusterGroup | null>(null);
@@ -94,15 +95,20 @@ export function MapView({ attacks, onAttackClick, isLoading }: MapViewProps) {
         icon: createCustomIcon(attack.severity),
       });
 
-      marker.bindPopup(`
-        <div style="font-family: Roboto, sans-serif; min-width: 200px;">
-          <div style="font-weight: 500; font-size: 14px; margin-bottom: 4px;">${attack.city}, ${attack.country}</div>
-          <div style="font-size: 12px; color: #666; margin-bottom: 8px;">${attack.date}</div>
-          <div style="font-size: 12px; margin-bottom: 4px;">Type: ${attack.attackType}</div>
-          <div style="font-size: 12px; margin-bottom: 4px;">Casualties: ${attack.killed + attack.wounded}</div>
-          <div style="font-size: 11px; color: #888; margin-top: 8px; cursor: pointer; text-decoration: underline;">Click marker for details</div>
-        </div>
-      `);
+      if (!isDetailOpen) {
+        marker.bindTooltip(`
+          <div style="font-family: Roboto, sans-serif; min-width: 200px;">
+            <div style="font-weight: 500; font-size: 14px; margin-bottom: 4px;">${attack.city}, ${attack.country}</div>
+            <div style="font-size: 12px; color: #666; margin-bottom: 8px;">${attack.date}</div>
+            <div style="font-size: 12px; margin-bottom: 4px;">Type: ${attack.attackType}</div>
+            <div style="font-size: 12px; margin-bottom: 4px;">Casualties: ${attack.killed + attack.wounded}</div>
+          </div>
+        `, {
+          direction: "top",
+          offset: [0, -10],
+          opacity: 1,
+        });
+      }
 
       marker.on("click", () => {
         onAttackClick(attack);
@@ -117,12 +123,12 @@ export function MapView({ attacks, onAttackClick, isLoading }: MapViewProps) {
       );
       mapRef.current.fitBounds(bounds, { padding: [50, 50], maxZoom: 6 });
     }
-  }, [attacks, onAttackClick]);
+  }, [attacks, onAttackClick, isDetailOpen]);
 
   return (
     <div className="relative h-full w-full" data-testid="map-container">
       <div ref={mapContainerRef} className="h-full w-full" />
-      
+
       {isLoading && (
         <div className="absolute inset-0 bg-background/50 flex items-center justify-center">
           <div className="bg-card border rounded-md p-4 shadow-lg">

@@ -558,6 +558,97 @@ export class MemStorage implements IStorage {
         description: "Coordinated hijacking of commercial aircraft used as weapons.",
         severity: "Critical",
       },
+      {
+        date: "2024-09-01",
+        city: "Mafa",
+        country: "Nigeria",
+        region: "West Africa",
+        latitude: 11.9234,
+        longitude: 13.6001,
+        attackType: "Armed Assault",
+        killed: 81,
+        wounded: 45,
+        description: "Boko Haram militants attacked Mafa village, shooting residents and burning buildings.",
+        severity: "Critical",
+      },
+      {
+        date: "2024-09-05",
+        city: "Tarmuwa",
+        country: "Nigeria",
+        region: "West Africa",
+        latitude: 12.1000,
+        longitude: 11.7500,
+        attackType: "Armed Assault",
+        killed: 100,
+        wounded: 50,
+        description: "Suspected Boko Haram extremists attacked the Tarmuwa council area, causing mass casualties.",
+        severity: "Critical",
+      },
+      {
+        date: "2025-01-15",
+        city: "Mallam Fatori",
+        country: "Nigeria",
+        region: "West Africa",
+        latitude: 13.6766,
+        longitude: 13.3378,
+        attackType: "Armed Assault",
+        killed: 20,
+        wounded: 35,
+        description: "ISWAP fighters overran an army base near the Niger border.",
+        severity: "High",
+      },
+      {
+        date: "2025-03-25",
+        city: "Wulgo",
+        country: "Nigeria",
+        region: "West Africa",
+        latitude: 12.4667,
+        longitude: 14.2000,
+        attackType: "Armed Assault",
+        killed: 12,
+        wounded: 10,
+        description: "Joint Boko Haram and ISWAP attack on a military base.",
+        severity: "High",
+      },
+      {
+        date: "2025-05-10",
+        city: "Marte",
+        country: "Nigeria",
+        region: "West Africa",
+        latitude: 12.3667,
+        longitude: 13.8333,
+        attackType: "Armed Assault",
+        killed: 5,
+        wounded: 0,
+        description: "Boko Haram attack forced 20,000 residents to flee.",
+        severity: "Medium",
+      },
+      {
+        date: "2025-06-21",
+        city: "Konduga",
+        country: "Nigeria",
+        region: "West Africa",
+        latitude: 11.6533,
+        longitude: 13.4181,
+        attackType: "Suicide Bombing",
+        killed: 12,
+        wounded: 25,
+        description: "Suicide bombing in Konduga town.",
+        severity: "High",
+      },
+      {
+        date: "2025-10-15",
+        city: "Maiduguri",
+        country: "Nigeria",
+        region: "West Africa",
+        latitude: 11.8333,
+        longitude: 13.1500,
+        attackType: "Drone Attack",
+        killed: 4,
+        wounded: 5,
+        description: "Drone-backed attacks by insurgents in Borno state.",
+        severity: "Medium",
+      },
     ];
 
     sampleAttacks.forEach((attack) => {
@@ -615,7 +706,7 @@ export class MemStorage implements IStorage {
 
   async getStats(): Promise<Stats> {
     const attacks = Array.from(this.attacks.values());
-    
+
     const totalKilled = attacks.reduce((sum, a) => sum + a.killed, 0);
     const totalWounded = attacks.reduce((sum, a) => sum + a.wounded, 0);
 
@@ -631,10 +722,10 @@ export class MemStorage implements IStorage {
 
     const topRegion = Array.from(regionCounts.entries())
       .sort(([, a], [, b]) => b - a)[0]?.[0] || "N/A";
-    
+
     const topCountry = Array.from(countryCounts.entries())
       .sort(([, a], [, b]) => b - a)[0]?.[0] || "N/A";
-    
+
     const topAttackType = Array.from(typeCounts.entries())
       .sort(([, a], [, b]) => b - a)[0]?.[0] || "N/A";
 

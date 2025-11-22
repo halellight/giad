@@ -46,16 +46,16 @@ export default function Home() {
     const params = new URLSearchParams();
     if (appliedFilters.dateFrom) params.append("dateFrom", appliedFilters.dateFrom);
     if (appliedFilters.dateTo) params.append("dateTo", appliedFilters.dateTo);
-    
-    [...appliedFilters.countries].sort().forEach(c => params.append("countries", c));
+
+    [...(appliedFilters.countries || [])].sort().forEach(c => params.append("countries", c));
     [...(appliedFilters.regions || [])].sort().forEach(r => params.append("regions", r));
-    [...appliedFilters.attackTypes].sort().forEach(t => params.append("attackTypes", t));
-    [...appliedFilters.severities].sort().forEach(s => params.append("severities", s));
-    
+    [...(appliedFilters.attackTypes || [])].sort().forEach(t => params.append("attackTypes", t));
+    [...(appliedFilters.severities || [])].sort().forEach(s => params.append("severities", s));
+
     if (appliedFilters.casualtyMin !== undefined) params.append("casualtyMin", appliedFilters.casualtyMin.toString());
     if (appliedFilters.casualtyMax !== undefined) params.append("casualtyMax", appliedFilters.casualtyMax.toString());
     if (appliedFilters.searchQuery) params.append("searchQuery", appliedFilters.searchQuery);
-    
+
     return [`/api/attacks?${params.toString()}`];
   }, [appliedFilters]);
 
@@ -149,6 +149,7 @@ export default function Home() {
                     attacks={attacks}
                     onAttackClick={setSelectedAttack}
                     isLoading={isLoading}
+                    isDetailOpen={!!selectedAttack}
                   />
                 </div>
 
