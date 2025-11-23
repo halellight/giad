@@ -5,6 +5,7 @@ import { app } from "../server/app";
 import { registerRoutesSync } from "../server/routes";
 import { storage } from "../server/storage";
 
+// Updated 2025-11-23T03:23 - Use sync route registration for Vercel
 // Register API routes synchronously for serverless
 registerRoutesSync(app);
 

@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 
+// Updated 2025-11-23T03:23 - Serverless function fix
 export function registerRoutesSync(app: Express): void {
   app.get("/api/attacks", async (req, res) => {
     try {
