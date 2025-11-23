@@ -1,4 +1,3 @@
-```typescript
 import { type Attack, type InsertAttack } from "@shared/schema";
 // Force Vercel rebuild
 import { randomUUID } from "crypto";
