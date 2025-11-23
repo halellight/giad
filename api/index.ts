@@ -1,18 +1,15 @@
 import fs from "node:fs";
 import path from "node:path";
 import { app } from "../server/app";
+import { storage } from "../server/storage";
 
 // Test endpoint to verify the function works
 app.get("/api/test", (_req, res) => {
     res.json({ message: "Serverless function is working!" });
 });
 
-// Try to import and use storage
 app.get("/api/attacks", async (req, res) => {
     try {
-        // Dynamic import to avoid initialization issues
-        const { storage } = await import("../server/storage");
-
         const filters = {
             dateFrom: req.query.dateFrom as string | undefined,
             dateTo: req.query.dateTo as string | undefined,
@@ -39,7 +36,6 @@ app.get("/api/attacks", async (req, res) => {
 
 app.get("/api/attacks/:id", async (req, res) => {
     try {
-        const { storage } = await import("../server/storage");
         const attack = await storage.getAttackById(req.params.id);
         if (!attack) {
             return res.status(404).json({ error: "Attack not found" });
@@ -56,7 +52,6 @@ app.get("/api/attacks/:id", async (req, res) => {
 
 app.get("/api/stats", async (req, res) => {
     try {
-        const { storage } = await import("../server/storage");
         const stats = await storage.getStats();
         res.json(stats);
     } catch (error: any) {

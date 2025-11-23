@@ -288,7 +288,7 @@ export function AppSidebar({ filters, onFilterChange, onApplyFilters, attacks }:
 
           <div className="pt-4 space-y-2">
             <Button
-              onClick={onApplyFilters}
+              onClick={() => onApplyFilters()}
               className="w-full"
               data-testid="button-apply-filters"
             >

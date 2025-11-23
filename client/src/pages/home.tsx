@@ -5,6 +5,7 @@ import { MapView } from "@/components/map-view";
 import { Timeline } from "@/components/timeline";
 import { AttackCard } from "@/components/attack-card";
 import { StatsPanel } from "@/components/stats-panel";
+import type { StatsData } from "@/components/stats-panel";
 import { AttackDetailModal } from "@/components/attack-detail-modal";
 import { SearchBar } from "@/components/search-bar";
 import { AppSidebar } from "@/components/app-sidebar";
@@ -63,7 +64,7 @@ export default function Home() {
     queryKey: attacksQueryKey,
   });
 
-  const { data: stats } = useQuery({
+  const { data: stats } = useQuery<StatsData>({
     queryKey: ["/api/stats"],
   });
 

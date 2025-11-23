@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { TrendingUp, MapPin, Skull, AlertTriangle } from "lucide-react";
 
-interface StatsData {
+export interface StatsData {
   totalAttacks: number;
   totalKilled: number;
   totalWounded: number;
