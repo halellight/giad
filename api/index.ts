@@ -1,12 +1,18 @@
 import fs from "node:fs";
 import path from "node:path";
-import express from "express";
 import { app } from "../server/app";
-import { storage } from "../server/storage";
 
-// Define routes directly in the serverless function
+// Test endpoint to verify the function works
+app.get("/api/test", (_req, res) => {
+    res.json({ message: "Serverless function is working!" });
+});
+
+// Try to import and use storage
 app.get("/api/attacks", async (req, res) => {
     try {
+        // Dynamic import to avoid initialization issues
+        const { storage } = await import("../server/storage");
+
         const filters = {
             dateFrom: req.query.dateFrom as string | undefined,
             dateTo: req.query.dateTo as string | undefined,
@@ -21,32 +27,44 @@ app.get("/api/attacks", async (req, res) => {
 
         const attacks = await storage.getAllAttacks(filters);
         res.json(attacks);
-    } catch (error) {
-        console.error("Error fetching attacks:", error);
-        res.status(500).json({ error: "Failed to fetch attacks" });
+    } catch (error: any) {
+        console.error("Error in /api/attacks:", error);
+        res.status(500).json({
+            error: "Failed to fetch attacks",
+            message: error.message,
+            stack: error.stack
+        });
     }
 });
 
 app.get("/api/attacks/:id", async (req, res) => {
     try {
+        const { storage } = await import("../server/storage");
         const attack = await storage.getAttackById(req.params.id);
         if (!attack) {
             return res.status(404).json({ error: "Attack not found" });
         }
         res.json(attack);
-    } catch (error) {
-        console.error("Error fetching attack:", error);
-        res.status(500).json({ error: "Failed to fetch attack" });
+    } catch (error: any) {
+        console.error("Error in /api/attacks/:id:", error);
+        res.status(500).json({
+            error: "Failed to fetch attack",
+            message: error.message
+        });
     }
 });
 
 app.get("/api/stats", async (req, res) => {
     try {
+        const { storage } = await import("../server/storage");
         const stats = await storage.getStats();
         res.json(stats);
-    } catch (error) {
-        console.error("Error fetching stats:", error);
-        res.status(500).json({ error: "Failed to fetch stats" });
+    } catch (error: any) {
+        console.error("Error in /api/stats:", error);
+        res.status(500).json({
+            error: "Failed to fetch stats",
+            message: error.message
+        });
     }
 });
 
@@ -54,7 +72,7 @@ app.get("/api/stats", async (req, res) => {
 const distPath = path.resolve(process.cwd(), "dist/public");
 
 if (fs.existsSync(distPath)) {
-    app.use(express.static(distPath));
+    app.use(require("express").static(distPath));
     app.use("*", (_req, res) => {
         res.sendFile(path.resolve(distPath, "index.html"));
     });
