@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 
-export async function registerRoutes(app: Express): Promise<Server> {
+export function registerRoutesSync(app: Express): void {
   app.get("/api/attacks", async (req, res) => {
     try {
       const filters = {
@@ -47,8 +47,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: "Failed to fetch stats" });
     }
   });
+}
 
+export async function registerRoutes(app: Express): Promise<Server> {
+  registerRoutesSync(app);
   const httpServer = createServer(app);
-
   return httpServer;
 }
