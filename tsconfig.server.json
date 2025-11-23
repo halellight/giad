@@ -3,25 +3,20 @@
     "compilerOptions": {
         "module": "CommonJS",
         "moduleResolution": "node",
-        {
-            "extends": "./tsconfig.json",
-            "compilerOptions": {
-                "module": "CommonJS",
-                "moduleResolution": "node",
-                "target": "ES2020",
-                "outDir": "dist",
-                "noEmit": false,
-                "esModuleInterop": true,
-                "allowImportingTsExtensions": false
-            },
-            "include": [
-                "server/**/*",
-                "shared/**/*"
-            ],
-            "exclude": [
-                "vite.config.ts",
-                "server/index-dev.ts",
-                "server/index-prod.ts",
-                "**/*.test.ts"
-            ]
-        }
+        "target": "ES2020",
+        "outDir": "dist",
+        "noEmit": false,
+        "esModuleInterop": true,
+        "allowImportingTsExtensions": false
+    },
+    "include": [
+        "server/**/*",
+        "shared/**/*"
+    ],
+    "exclude": [
+        "vite.config.ts",
+        "server/index-dev.ts",
+        "server/index-prod.ts",
+        "**/*.test.ts"
+    ]
+}
