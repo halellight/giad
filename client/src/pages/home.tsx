@@ -43,30 +43,74 @@ export default function Home() {
   const [selectedAttack, setSelectedAttack] = useState<Attack | null>(null);
   const [view, setView] = useState<"map" | "grid">("map");
 
-  const attacksQueryKey = useMemo(() => {
-    const params = new URLSearchParams();
-    if (appliedFilters.dateFrom) params.append("dateFrom", appliedFilters.dateFrom);
-    if (appliedFilters.dateTo) params.append("dateTo", appliedFilters.dateTo);
-
-    [...(appliedFilters.countries || [])].sort().forEach(c => params.append("countries", c));
-    [...(appliedFilters.regions || [])].sort().forEach(r => params.append("regions", r));
-    [...(appliedFilters.attackTypes || [])].sort().forEach(t => params.append("attackTypes", t));
-    [...(appliedFilters.severities || [])].sort().forEach(s => params.append("severities", s));
-
-    if (appliedFilters.casualtyMin !== undefined) params.append("casualtyMin", appliedFilters.casualtyMin.toString());
-    if (appliedFilters.casualtyMax !== undefined) params.append("casualtyMax", appliedFilters.casualtyMax.toString());
-    if (appliedFilters.searchQuery) params.append("searchQuery", appliedFilters.searchQuery);
-
-    return [`/api/attacks?${params.toString()}`];
-  }, [appliedFilters]);
-
-  const { data: attacks = [], isLoading } = useQuery<Attack[]>({
-    queryKey: attacksQueryKey,
+  // Client-side filtering logic
+  const { data: allAttacks = [], isLoading } = useQuery<Attack[]>({
+    queryKey: ["/attacks.json"],
+    queryFn: async () => {
+      const res = await fetch("/attacks.json");
+      if (!res.ok) throw new Error("Failed to load attacks data");
+      return res.json();
+    }
   });
 
-  const { data: stats } = useQuery<StatsData>({
-    queryKey: ["/api/stats"],
-  });
+  const attacks = useMemo(() => {
+    let filtered = [...allAttacks];
+    const f = appliedFilters;
+
+    if (f.dateFrom) filtered = filtered.filter(a => a.date >= f.dateFrom);
+    if (f.dateTo) filtered = filtered.filter(a => a.date <= f.dateTo);
+
+    if (f.countries.length > 0) filtered = filtered.filter(a => f.countries.includes(a.country));
+    if (f.regions.length > 0) filtered = filtered.filter(a => f.regions.includes(a.region));
+    if (f.attackTypes.length > 0) filtered = filtered.filter(a => f.attackTypes.includes(a.attackType));
+    if (f.severities.length > 0) filtered = filtered.filter(a => f.severities.includes(a.severity));
+
+    if (f.casualtyMin > 0) filtered = filtered.filter(a => (a.killed + a.wounded) >= f.casualtyMin);
+    if (f.casualtyMax < 3000) filtered = filtered.filter(a => (a.killed + a.wounded) <= f.casualtyMax);
+
+    if (f.searchQuery) {
+      const q = f.searchQuery.toLowerCase();
+      filtered = filtered.filter(a =>
+        a.city.toLowerCase().includes(q) ||
+        a.country.toLowerCase().includes(q) ||
+        a.region.toLowerCase().includes(q) ||
+        a.attackType.toLowerCase().includes(q) ||
+        a.description.toLowerCase().includes(q)
+      );
+    }
+
+    return filtered.sort((a, b) => b.date.localeCompare(a.date));
+  }, [allAttacks, appliedFilters]);
+
+  const stats = useMemo(() => {
+    if (!allAttacks.length) return undefined;
+
+    const totalKilled = allAttacks.reduce((sum, a) => sum + a.killed, 0);
+    const totalWounded = allAttacks.reduce((sum, a) => sum + a.wounded, 0);
+
+    const regionCounts = new Map<string, number>();
+    const countryCounts = new Map<string, number>();
+    const typeCounts = new Map<string, number>();
+
+    allAttacks.forEach(attack => {
+      regionCounts.set(attack.region, (regionCounts.get(attack.region) || 0) + 1);
+      countryCounts.set(attack.country, (countryCounts.get(attack.country) || 0) + 1);
+      typeCounts.set(attack.attackType, (typeCounts.get(attack.attackType) || 0) + 1);
+    });
+
+    const topRegion = Array.from(regionCounts.entries()).sort(([, a], [, b]) => b - a)[0]?.[0] || "N/A";
+    const topCountry = Array.from(countryCounts.entries()).sort(([, a], [, b]) => b - a)[0]?.[0] || "N/A";
+    const topAttackType = Array.from(typeCounts.entries()).sort(([, a], [, b]) => b - a)[0]?.[0] || "N/A";
+
+    return {
+      totalAttacks: allAttacks.length,
+      totalKilled,
+      totalWounded,
+      topRegion,
+      topCountry,
+      topAttackType,
+    };
+  }, [allAttacks]);
 
   const handleFilterChange = (newFilters: Partial<FilterState>) => {
     setFilters(prev => ({ ...prev, ...newFilters }));
