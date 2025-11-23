@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 import L from "leaflet";
+// @ts-ignore
+window.L = L;
 import "leaflet.markercluster";
 import { Attack } from "@shared/schema";
 import "leaflet/dist/leaflet.css";

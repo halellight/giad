@@ -12,7 +12,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { Button } from "@/components/ui/button";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Map, BarChart3, Grid3x3 } from "lucide-react";
+import { Map as MapIcon, BarChart3, Grid3x3 } from "lucide-react";
 
 export interface FilterState {
   dateFrom: string;
@@ -54,6 +54,7 @@ export default function Home() {
   });
 
   const attacks = useMemo(() => {
+    if (!Array.isArray(allAttacks)) return [];
     let filtered = [...allAttacks];
     const f = appliedFilters;
 
@@ -83,7 +84,7 @@ export default function Home() {
   }, [allAttacks, appliedFilters]);
 
   const stats = useMemo(() => {
-    if (!allAttacks.length) return undefined;
+    if (!Array.isArray(allAttacks) || !allAttacks.length) return undefined;
 
     const totalKilled = allAttacks.reduce((sum, a) => sum + a.killed, 0);
     const totalWounded = allAttacks.reduce((sum, a) => sum + a.wounded, 0);
@@ -156,7 +157,7 @@ export default function Home() {
               <div className="flex items-center gap-4">
                 <SidebarTrigger data-testid="button-sidebar-toggle" />
                 <div className="flex items-center gap-2">
-                  <Map className="h-6 w-6 text-primary" data-testid="icon-logo" />
+                  <MapIcon className="h-6 w-6 text-primary" data-testid="icon-logo" />
                   <h1 className="text-xl font-medium" data-testid="text-app-title">
                     Global Attacks Database
                   </h1>
@@ -175,7 +176,7 @@ export default function Home() {
                 <Tabs value={view} onValueChange={(v) => setView(v as "map" | "grid")}>
                   <TabsList data-testid="tabs-view-switcher">
                     <TabsTrigger value="map" data-testid="tab-map-view">
-                      <Map className="h-4 w-4" />
+                      <MapIcon className="h-4 w-4" />
                     </TabsTrigger>
                     <TabsTrigger value="grid" data-testid="tab-grid-view">
                       <Grid3x3 className="h-4 w-4" />
