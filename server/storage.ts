@@ -1,5 +1,5 @@
 import { type Attack, type InsertAttack } from "@shared/schema";
-// Force Vercel rebuild
+// Force Vercel rebuild - 2025-11-23T03:15
 import { randomUUID } from "crypto";
 
 export interface IStorage {
