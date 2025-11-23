@@ -11,6 +11,7 @@ import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 interface MapViewProps {
   attacks: Attack[];
   onAttackClick: (attack: Attack) => void;
+  onMapClick?: () => void;
   isLoading: boolean;
   isDetailOpen: boolean;
 }
@@ -49,7 +50,7 @@ const createCustomIcon = (severity: string) => {
   });
 };
 
-export function MapView({ attacks, onAttackClick, isLoading, isDetailOpen }: MapViewProps) {
+export function MapView({ attacks, onAttackClick, onMapClick, isLoading, isDetailOpen }: MapViewProps) {
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markerClusterGroupRef = useRef<L.MarkerClusterGroup | null>(null);
@@ -76,6 +77,10 @@ export function MapView({ attacks, onAttackClick, isLoading, isDetailOpen }: Map
       });
 
       mapRef.current.addLayer(markerClusterGroupRef.current);
+
+      mapRef.current.on("click", () => {
+        onMapClick?.();
+      });
     }
 
     return () => {

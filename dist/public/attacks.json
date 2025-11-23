@@ -28,6 +28,48 @@
     "severity": "High"
   },
   {
+    "id": "yelwata-2025-06-13",
+    "date": "2025-06-13",
+    "city": "Yelwata",
+    "country": "Nigeria",
+    "region": "West Africa",
+    "latitude": 7.35,
+    "longitude": 8.84,
+    "attackType": "Armed Assault / Massacre",
+    "killed": 100,
+    "wounded": 27,
+    "description": "Suspected bandits/herder militia attacked Yelwata community in Benue State, killing around 100 people, burning houses; many displaced.",
+    "severity": "Critical"
+  },
+  {
+    "id": "yelwata-2025-08-11",
+    "date": "2025-08-11",
+    "city": "Yelwata / Udei",
+    "country": "Nigeria",
+    "region": "West Africa",
+    "latitude": 7.35,
+    "longitude": 8.84,
+    "attackType": "Armed Assault",
+    "killed": 3,
+    "wounded": 3,
+    "description": "Gunmen (suspected bandit / herder militia) attacked Yelwata and Udei communities. Police repelled them after a shootout.",
+    "severity": "High"
+  },
+  {
+    "id": "oreke-okeigbo-2025-06-04",
+    "date": "2025-06-04",
+    "city": "Oreke-Okeigbo",
+    "country": "Nigeria",
+    "region": "West Africa",
+    "latitude": 8.98,
+    "longitude": 4.56,
+    "attackType": "Mass Shooting / Abduction",
+    "killed": 2,
+    "wounded": null,
+    "description": "Gunmen attacked a marble mining site, killed two police officers, and kidnapped two workers (one local, one Chinese).",
+    "severity": "High"
+  },
+  {
     "id": "e64aa8fd-e5d4-4c49-8e02-98889ef3790d",
     "date": "2025-05-10",
     "city": "Marte",

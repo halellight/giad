@@ -6,7 +6,7 @@ import { Timeline } from "@/components/timeline";
 import { AttackCard } from "@/components/attack-card";
 import { StatsPanel } from "@/components/stats-panel";
 import type { StatsData } from "@/components/stats-panel";
-import { AttackDetailModal } from "@/components/attack-detail-modal";
+import { AttackDetailPanel } from "@/components/attack-detail-panel";
 import { SearchBar } from "@/components/search-bar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Button } from "@/components/ui/button";
@@ -194,10 +194,18 @@ export default function Home() {
                   <MapView
                     attacks={attacks}
                     onAttackClick={setSelectedAttack}
+                    onMapClick={() => setSelectedAttack(null)}
                     isLoading={isLoading}
                     isDetailOpen={!!selectedAttack}
                   />
                 </div>
+
+                {selectedAttack && (
+                  <AttackDetailPanel
+                    attack={selectedAttack}
+                    onClose={() => setSelectedAttack(null)}
+                  />
+                )}
 
                 <div className="border-t p-4 bg-card" data-testid="container-timeline">
                   <Timeline
@@ -286,13 +294,6 @@ export default function Home() {
             )}
           </div>
         </div>
-
-        {selectedAttack && (
-          <AttackDetailModal
-            attack={selectedAttack}
-            onClose={() => setSelectedAttack(null)}
-          />
-        )}
       </div>
     </SidebarProvider>
   );
